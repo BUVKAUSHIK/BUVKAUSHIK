@@ -1,7 +1,7 @@
 <p align="center">
   <!-- 1) Your hosted banner -->
   <img 
-    src="[https://raw.githubusercontent.com/BUVKAUSHIK/BUVKAUSHIK/main/assets/profile-banner.png](https://github.com/BUVKAUSHIK/BUVKAUSHIK/blob/main/profile-banner.png.png)" 
+    src="profile-banner.png.png" 
     alt="Profile Banner" 
     width="100%" 
   />

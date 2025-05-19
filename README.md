@@ -1,10 +1,5 @@
 <p align="center">
-  <!-- 1) Your hosted banner -->
-  <img 
-    src="profile-banner.png.png" 
-    alt="Profile Banner" 
-    width="100%" 
-  />
+  <!-- 1) Your hosted banner --
 </p>
 
 <p align="center">

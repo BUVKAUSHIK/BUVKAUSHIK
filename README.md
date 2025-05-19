@@ -117,5 +117,5 @@ automated response pipelines, anomaly detection
 
 ---
 
-<p align="center"><i>Turning data into decisions and threats into opportunities, with AI and intelligence at the core.</i></p>## Hi there 👋
+<p align="center"><i>Turning data into decisions and threats into opportunities, with AI and intelligence at the core.</i></p>
 

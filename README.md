@@ -1,8 +1,21 @@
-<img src ="https://drive.google.com/file/d/16XwbnwSqrWGwlxhPegU9r0fq-XQR99m6/view?usp=sharing"/>
-
-<h1 align="center">👋 Hi, I'm UVA</h1>
 <p align="center">
+  <!-- 1) Your hosted banner -->
+  <img 
+    src="[https://raw.githubusercontent.com/BUVKAUSHIK/BUVKAUSHIK/main/assets/profile-banner.png](https://github.com/BUVKAUSHIK/BUVKAUSHIK/blob/main/profile-banner.png.png)" 
+    alt="Profile Banner" 
+    width="100%" 
+  />
+</p>
+
+<p align="center">
+  <!-- 2) Typing SVG for dynamic name -->
+  <img
+    src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&size=50&pause=1000&color=EDEDED&center=true&vCenter=true&width=600&height=60&lines=%F0%9F%91%8B+Hi%2C+I'm+UVA"
+    alt="👋 Hi, I'm UVA"
+  />
+  <p align="center">
   <b>Business Intelligence | AI Product Management | Threat Analysis</b>
+</p>
 </p>
 
 ---

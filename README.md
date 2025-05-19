@@ -1,6 +1,6 @@
-![Profile Banner](https://drive.google.com/file/d/16XwbnwSqrWGwlxhPegU9r0fq-XQR99m6/view?usp=sharing)
+<img src ="https://drive.google.com/file/d/16XwbnwSqrWGwlxhPegU9r0fq-XQR99m6/view?usp=sharing"/>
 
-<h1 align="center">👋 Hi, I'm BUVKAUSHIK</h1>
+<h1 align="center">👋 Hi, I'm UVA</h1>
 <p align="center">
   <b>Business Intelligence | AI Product Management | Threat Analysis</b>
 </p>

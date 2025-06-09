@@ -26,8 +26,7 @@
 
 ## 🧠 About Me
 
-Transforming vision into value at the crossroads of AI, business intelligence, and security.  
-I architect end-to-end AI solutions, design data-driven strategies, and aggregate threat intelligence for secure, scalable growth.  
+Transforming vision into value at the crossroads of AI, business intelligence, and security.  I architect end-to-end AI solutions, design data-driven strategies, and aggregate threat intelligence for secure, scalable growth. 
 Fueled by curiosity, I bridge the gap between technical innovation and real-world impact.
 
 ---

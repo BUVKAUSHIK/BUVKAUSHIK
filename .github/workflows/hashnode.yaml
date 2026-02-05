@@ -1,23 +1,23 @@
-name: 'Substack Blog Posts'
+name: Substack Blog Posts
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Runs once a day
+    - cron: '0 0 * * *'
 
 jobs:
   update_blogs:
-    name: 'Latest Substack Posts'
+    name: Fetch Latest Substack Posts
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout Repository'
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: 'Update README with Substack Posts'
+      - name: Update README with Substack posts
         uses: gautamkrishnar/blog-post-workflow@v1
         with:
           feed_list: "https://uvabolla.substack.com/feed"
-          max_post_count: 6
+          max_post_count: 5
           template: "$newline- [$title]($url) — *$date*"
           date_format: "MMM dd, yyyy"
           comment_tag_name: "BLOG-POST-LIST"

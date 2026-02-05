@@ -32,15 +32,13 @@ SQL, Python, JavaScript/TypeScript, Java, Power BI, Tableau, Snowflake, Next.js,
 
 ---
 
-### Recent Blog Posts ✍️
-
+### Writing
 <!-- BLOG-POST-LIST:START -->
 <!-- BLOG-POST-LIST:END -->
 
 ---
 
-### Recent Activity ⚡
-
+### Recent Activity :zap:
 <!--START_SECTION:activity-->
 <!--END_SECTION:activity-->
 

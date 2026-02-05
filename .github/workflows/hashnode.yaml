@@ -13,13 +13,60 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update README with Substack posts
-        uses: gautamkrishnar/blog-post-workflow@v1
-        with:
-          feed_list: "https://uvabolla.substack.com/feed"
-          max_post_count: 5
-          template: "$newline- [$title]($url) — *$date*"
-          date_format: "MMM dd, yyyy"
-          comment_tag_name: "BLOG-POST-LIST"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Fetch Substack RSS feed
+        run: |
+          curl -s -L \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            -o /tmp/substack-feed.xml \
+            "https://uvabolla.substack.com/feed"
+
+      - name: Parse and update README
+        run: |
+          # Extract titles and links from the RSS feed
+          python3 << 'EOF'
+          import xml.etree.ElementTree as ET
+          import re
+          from datetime import datetime
+
+          tree = ET.parse('/tmp/substack-feed.xml')
+          root = tree.getroot()
+          channel = root.find('channel')
+          items = channel.findall('item')
+
+          posts = []
+          for item in items[:5]:
+              title = item.find('title').text.strip()
+              link = item.find('link').text.strip()
+              pub_date = item.find('pubDate').text.strip()
+              try:
+                  dt = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S %Z")
+                  formatted_date = dt.strftime("%b %d, %Y")
+              except:
+                  formatted_date = pub_date
+              posts.append(f"- [{title}]({link}) — *{formatted_date}*")
+
+          blog_section = "\n".join(posts)
+
+          with open('README.md', 'r') as f:
+              content = f.read()
+
+          pattern = r'(<!-- BLOG-POST-LIST:START -->).*?(<!-- BLOG-POST-LIST:END -->)'
+          replacement = f'\\1\n{blog_section}\n\\2'
+          new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
+
+          with open('README.md', 'w') as f:
+              f.write(new_content)
+
+          print("Updated README with posts:")
+          for p in posts:
+              print(p)
+          EOF
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git diff --quiet && exit 0 || true
+          git add README.md
+          git commit -m "chore: update blog posts from Substack"
+          git push

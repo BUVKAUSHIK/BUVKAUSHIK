@@ -3,7 +3,7 @@ name: Substack Blog Posts
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
 
 jobs:
   update_blogs:
@@ -22,7 +22,6 @@ jobs:
 
       - name: Parse and update README
         run: |
-          # Extract titles and links from the RSS feed
           python3 << 'EOF'
           import xml.etree.ElementTree as ET
           import re

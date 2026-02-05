@@ -1,4 +1,4 @@
-# Kaushik Bolla
+# Uva Bolla
 
 Seattle, WA · MS Information Management, University of Washington
 

@@ -3,7 +3,7 @@ name: 'Substack Blog Posts'
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Runs once a day at midnight UTC
+    - cron: '0 0 * * *'  # Runs once a day
 
 jobs:
   update_blogs:
@@ -18,7 +18,8 @@ jobs:
         with:
           feed_list: "https://uvabolla.substack.com/feed"
           max_post_count: 6
-          template: "$newline- [$title]($url) — $date"
+          template: "$newline- [$title]($url) — *$date*"
           date_format: "MMM dd, yyyy"
+          comment_tag_name: "BLOG-POST-LIST"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

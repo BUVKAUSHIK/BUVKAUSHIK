@@ -1,9 +1,9 @@
-# .github/workflows/update-readme.yml
 name: Update Recent Activity
 
 on:
   schedule:
-    - cron: "*/45 * * * *"  # Every 45 minutes
+    - cron: "*/45 * * * *"
+  workflow_dispatch:
 
 jobs:
   build:

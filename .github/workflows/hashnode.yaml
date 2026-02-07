@@ -1,20 +1,146 @@
-name: Hashnode API Workflow
+name: Substack Blog Posts
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'  # Runs daily at midnight UTC
 
 jobs:
-  curl_with_retry:
+  update_blogs:
+    name: Fetch Latest Substack Posts
     runs-on: ubuntu-latest
     steps:
-      - name: Curl Command with Retry
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch Substack RSS feed with anti-Cloudflare headers
         run: |
-          for i in {1..5}; do
-            curl -H 'User-Agent: Mozilla/5.0' \
-                 -H 'CF-Connecting-IP: x.x.x.x' \
-                 -H 'Cookie: _cfuid=your_cf_id;' \
-                 -H 'Authorization: Bearer YOUR_API_TOKEN' \
-                 https://your_api_endpoint.com && break || sleep 5;
-          done
+          curl -s -L \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            -H "Accept: application/rss+xml, application/xml, text/xml, */*" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Accept-Encoding: gzip, deflate" \
+            -H "Connection: keep-alive" \
+            -H "Upgrade-Insecure-Requests: 1" \
+            --compressed \
+            --max-time 30 \
+            --retry 3 \
+            --retry-delay 2 \
+            --retry-max-time 60 \
+            -o /tmp/substack-feed.xml \
+            "https://uvabolla.substack.com/feed"
+          
+          # Check if we got HTML instead of XML (Cloudflare block)
+          if head -1 /tmp/substack-feed.xml | grep -q "<!DOCTYPE html"; then
+            echo "⚠️ Cloudflare is blocking the request. Trying alternative approach..."
+            # Fallback: Try with different headers
+            curl -s -L \
+              -H "User-Agent: curl/7.85.0" \
+              -H "Accept: */*" \
+              --max-time 30 \
+              --retry 2 \
+              -o /tmp/substack-feed.xml \
+              "https://uvabolla.substack.com/feed" || true
+          fi
+
+      - name: Parse and update README
+        run: |
+          python3 << 'EOF'
+          import xml.etree.ElementTree as ET
+          import re
+          from datetime import datetime
+          import sys
+
+          try:
+              with open('/tmp/substack-feed.xml', 'r', encoding='utf-8', errors='replace') as f:
+                  content = f.read()
+          except Exception as e:
+              print(f"Error reading file: {e}")
+              sys.exit(1)
+
+          # Check if we got HTML
+          if "<!DOCTYPE html" in content or "<html" in content:
+              print("❌ Error: Received HTML instead of RSS feed")
+              print("First 500 chars:", content[:500])
+              sys.exit(1)
+
+          # Sanitize XML: escape unescaped ampersands
+          content = re.sub(r'&(?!(?:apos|quot|amp|lt|gt|#[0-9]+|#x[0-9a-fA-F]+);)', '&amp;', content)
+
+          try:
+              root = ET.fromstring(content)
+          except ET.ParseError as e:
+              print(f"❌ XML Parse Error: {e}")
+              print(f"First 1000 chars: {content[:1000]}")
+              sys.exit(1)
+
+          channel = root.find('channel')
+          if channel is None:
+              print("❌ Error: No channel found in RSS feed")
+              sys.exit(1)
+
+          items = channel.findall('item')
+          if not items:
+              print("⚠️ Warning: No items found in RSS feed")
+
+          posts = []
+          for item in items[:5]:
+              title_elem = item.find('title')
+              link_elem = item.find('link')
+              pub_date_elem = item.find('pubDate')
+
+              if title_elem is None or link_elem is None:
+                  continue
+
+              title = (title_elem.text or "Untitled").strip()
+              link = (link_elem.text or "").strip()
+              pub_date = (pub_date_elem.text or "") if pub_date_elem is not None else ""
+
+              try:
+                  if pub_date:
+                      dt = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S %Z")
+                      formatted_date = dt.strftime("%b %d, %Y")
+                  else:
+                      formatted_date = "Unknown date"
+              except:
+                  formatted_date = pub_date if pub_date else "Unknown date"
+
+              if title and link:
+                  posts.append(f"- [{title}]({link}) — *{formatted_date}*")
+
+          if not posts:
+              print("⚠️ No posts were extracted from the feed")
+              sys.exit(0)
+
+          blog_section = "\n".join(posts)
+
+          try:
+              with open('README.md', 'r') as f:
+                  readme_content = f.read()
+          except FileNotFoundError:
+              print("⚠️ README.md not found. Creating it...")
+              readme_content = "# Blog\n\n<!-- BLOG-POST-LIST:START -->\n<!-- BLOG-POST-LIST:END -->\n"
+
+          pattern = r'(<!-- BLOG-POST-LIST:START -->).*?(<!-- BLOG-POST-LIST:END -->)'
+          new_readme = re.sub(pattern, f'\\1\n{blog_section}\n\\2', readme_content, flags=re.DOTALL)
+
+          with open('README.md', 'w') as f:
+              f.write(new_readme)
+
+          print("✅ Successfully updated README with posts:")
+          for p in posts:
+              print(p)
+          EOF
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md
+          
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update blog posts from Substack"
+            git push
+          fi

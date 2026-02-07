@@ -17,8 +17,24 @@ jobs:
         run: |
           curl -s -L \
             -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" \
+            -H "Accept: application/rss+xml, application/xml, text/xml, */*" \
+            -H "Accept-Language: en-US,en;q=0.9" \
+            -H "Accept-Encoding: gzip, deflate, br" \
+            -H "DNT: 1" \
+            -H "Connection: keep-alive" \
+            -H "Upgrade-Insecure-Requests: 1" \
+            -b "/tmp/cookies.txt" -c "/tmp/cookies.txt" \
+            --compressed \
+            --retry 3 \
+            --retry-delay 5 \
             -o /tmp/substack-feed.xml \
             "https://uvabolla.substack.com/feed"
+          
+          # Verify we got XML, not HTML
+          if head -1 /tmp/substack-feed.xml | grep -q "<!DOCTYPE html"; then
+            echo "❌ Failed: Got HTML instead of RSS feed (Cloudflare block detected)"
+            exit 1
+          fi
 
       - name: Parse and update README
         run: |
@@ -32,7 +48,6 @@ jobs:
               content = f.read()
           
           # Fix common XML issues
-          # Replace unescaped & with &amp;
           content = re.sub(r'&(?!(?:apos|quot|amp|lt|gt|#[0-9]+|#x[0-9a-fA-F]+);)', '&amp;', content)
           
           try:
@@ -43,6 +58,10 @@ jobs:
               exit(1)
           
           channel = root.find('channel')
+          if channel is None:
+              print("Error: No channel found in RSS feed")
+              exit(1)
+          
           items = channel.findall('item')
 
           posts = []
@@ -79,7 +98,7 @@ jobs:
           with open('README.md', 'w') as f:
               f.write(new_content)
 
-          print("Updated README with posts:")
+          print("✅ Updated README with posts:")
           for p in posts:
               print(p)
           EOF

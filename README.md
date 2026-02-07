@@ -40,6 +40,8 @@ SQL, Python, JavaScript/TypeScript, Java, Power BI, Tableau, Snowflake, Next.js,
 
 ### Recent Activity :zap:
 <!--START_SECTION:activity-->
+1. 🎉 Merged PR [#1](https://github.com/BUVKAUSHIK/BUVKAUSHIK/pull/1) in [BUVKAUSHIK/BUVKAUSHIK](https://github.com/BUVKAUSHIK/BUVKAUSHIK)
+2. 💪 Opened PR [#1](https://github.com/BUVKAUSHIK/BUVKAUSHIK/pull/1) in [BUVKAUSHIK/BUVKAUSHIK](https://github.com/BUVKAUSHIK/BUVKAUSHIK)
 <!--END_SECTION:activity-->
 
 ---

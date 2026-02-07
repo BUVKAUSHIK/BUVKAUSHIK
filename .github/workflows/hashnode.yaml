@@ -27,22 +27,45 @@ jobs:
           import re
           from datetime import datetime
 
-          tree = ET.parse('/tmp/substack-feed.xml')
-          root = tree.getroot()
+          # Read and sanitize the XML
+          with open('/tmp/substack-feed.xml', 'r', encoding='utf-8') as f:
+              content = f.read()
+          
+          # Fix common XML issues
+          # Replace unescaped & with &amp;
+          content = re.sub(r'&(?!(?:apos|quot|amp|lt|gt|#[0-9]+|#x[0-9a-fA-F]+);)', '&amp;', content)
+          
+          try:
+              root = ET.fromstring(content)
+          except ET.ParseError as e:
+              print(f"XML Parse Error: {e}")
+              print(f"First 1000 chars: {content[:1000]}")
+              exit(1)
+          
           channel = root.find('channel')
           items = channel.findall('item')
 
           posts = []
           for item in items[:5]:
-              title = item.find('title').text.strip()
-              link = item.find('link').text.strip()
-              pub_date = item.find('pubDate').text.strip()
+              title_elem = item.find('title')
+              link_elem = item.find('link')
+              pub_date_elem = item.find('pubDate')
+              
+              if title_elem is None or link_elem is None or pub_date_elem is None:
+                  continue
+              
+              title = title_elem.text.strip() if title_elem.text else "Untitled"
+              link = link_elem.text.strip() if link_elem.text else ""
+              pub_date = pub_date_elem.text.strip() if pub_date_elem.text else ""
+              
               try:
                   dt = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S %Z")
                   formatted_date = dt.strftime("%b %d, %Y")
               except:
                   formatted_date = pub_date
-              posts.append(f"- [{title}]({link}) — *{formatted_date}*")
+              
+              if title and link:
+                  posts.append(f"- [{title}]({link}) — *{formatted_date}*")
 
           blog_section = "\n".join(posts)
 

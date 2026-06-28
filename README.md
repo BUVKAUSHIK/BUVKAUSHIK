@@ -94,8 +94,8 @@ The through-line is simple: I like taking ambiguous problems, making them concre
 
 ### Recent Activity :zap:
 <!--START_SECTION:activity-->
-1. 🎉 Merged PR [#2](https://github.com/BUVKAUSHIK/BUVKAUSHIK/pull/2) in [BUVKAUSHIK/BUVKAUSHIK](https://github.com/BUVKAUSHIK/BUVKAUSHIK)
-2. 💪 Opened PR [#2](https://github.com/BUVKAUSHIK/BUVKAUSHIK/pull/2) in [BUVKAUSHIK/BUVKAUSHIK](https://github.com/BUVKAUSHIK/BUVKAUSHIK)
+1. 🎉 Merged PR [#1](https://github.com/BUVKAUSHIK/test-application/pull/1) in [BUVKAUSHIK/test-application](https://github.com/BUVKAUSHIK/test-application)
+2. 💪 Opened PR [#1](https://github.com/BUVKAUSHIK/test-application/pull/1) in [BUVKAUSHIK/test-application](https://github.com/BUVKAUSHIK/test-application)
 <!--END_SECTION:activity-->
 
 ---

@@ -94,7 +94,7 @@ The through-line is simple: I like taking ambiguous problems, making them concre
 
 ### Recent Activity :zap:
 <!--START_SECTION:activity-->
-1. 🎉 Merged PR [#1](https://github.com/BUVKAUSHIK/test-application/pull/1) in [BUVKAUSHIK/test-application](https://github.com/BUVKAUSHIK/test-application)
+1. 💪 Opened PR [#6](https://github.com/geo-smart/geo-smart.github.io/pull/6) in [geo-smart/geo-smart.github.io](https://github.com/geo-smart/geo-smart.github.io)
 2. 💪 Opened PR [#1](https://github.com/BUVKAUSHIK/test-application/pull/1) in [BUVKAUSHIK/test-application](https://github.com/BUVKAUSHIK/test-application)
 <!--END_SECTION:activity-->
 
